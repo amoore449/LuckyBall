@@ -1,0 +1,196 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<title>Lottery Number</title>
+		<style>
+			body {
+				background-color: #F3DE8A;
+				color: #272838;
+				text-align: center;
+				font-family: Georgia, "Times New Roman";
+			}
+			h1 {
+				color:#7E7F9A;
+				font-size: 40px;
+				font-family: Helvetica, Georgia, "Times New Roman";
+			}
+		</style>
+
+		
+	</head>
+	<body>
+	<h1>Lucky Ball!</h1>
+
+	<p>Test your luck by guessing the lucky numbers!</p>
+
+		<p id = "unsorted"></p>
+		<p id = "sorted"> </p>
+
+
+	
+
+
+	<form>
+		<br />
+		<input type="text" id="txt1" placeholder="type guess here">
+		<br />
+		<input type="text" id="luck" placeholder="type luckyball here">
+		<br />
+		<input type='button' onclick="getVal();" value="Show the value">
+	</form>
+
+	<p id = "answer">
+	</p>
+
+	<p id="results">
+	</p>
+
+<script type="text/javascript">
+		lotnum = new Array;
+		ornum = new Array;
+
+		for (i = 0; i<6;i++) {
+			n = Math.random() * 47 +1;
+			n = Math.round(n);
+			lotnum[i] = n;
+		}
+
+		n = Math.random() * 17 + 1;
+		n = Math.round(n);
+		lotnum[5]=n;
+
+		for (i = 0; i < 6; i++) {
+		ornum[i] = lotnum[i];
+		}
+
+		
+		ornum.sort(function(a,b){return a-b});
+
+		for (i=0; i<6;i++) {
+			document.getElementById("unsorted").innerHTML += (lotnum[i] + " is in the "+ i + " place in the array <br>");
+		}
+
+		for (i=0; i<6;i++) {
+			document.getElementById("sorted").innerHTML += (ornum[i] + " is in the "+ i + " place in the array <br>");
+		}
+			
+		function getVal() {
+			document.getElementById("results").innerHTML = "";
+			var string1 = document.getElementById('txt1').value;
+			var string2 = document.getElementById('luck').value;
+			var string3 = string1 + " " + string2; 
+
+			/*document.getElementById("answer").innerHTML = (string3);*/
+			guessstring = new Array; 
+			guessnum = new Array;
+
+			guessstring= parse_array(string3);
+			guessnum = num_con(guessstring, guessnum);
+			/*print_arr(guessnum);
+			print_arr(lotnum);*/
+			compare(guessnum, lotnum);
+
+		}
+		function compare(test1, test2){
+			var ball = false;
+			test3 = new Array;
+			for (i=0; i<test2.length; i++) {
+				test3[i] = test2[i];
+			}
+			var guessball = test1.pop();
+			var trueball = test3.pop();
+			/*for (i=0; i<test1.length; i++) {
+				document.getElementById("results").innerHTML += (test1[i] + " ");
+				document.getElementById("results").innerHTML += ("guessball" + guessball);
+				document.getElementById("results").innerHTML += ("trueball" + trueball);
+			}*/
+			if (guessball==trueball){
+				ball = true;
+			}
+			var winnings = 0;
+
+			for (i=0; i<test1.length; i++) {
+				for (j=0; j<test2.length;j++) {
+					if (test1[i] == test3[j]) {
+						var taken = test3.splice(j,1);
+						j--;
+						/*document.getElementById("results").innerHTML += ("taken" +taken+" ");*/
+						winnings++;
+						
+					}
+				}
+			}
+			print_com(winnings,ball);
+		}
+		function print_com (winnings, ball) {
+			if (ball) {
+				if (winnings >= 5) {
+					document.getElementById("results").innerHTML = (winnings + " matches and lucky ball! You win $7,000 a WEEK for LIFE!");
+				} else if (winnings == 4){
+					document.getElementById("results").innerHTML = (winnings + " matches and lucky ball! You win $5,000!");
+				} else if (winnings == 3){
+					document.getElementById("results").innerHTML = (winnings + " matches and lucky ball! You win $150!");
+				} else if (winnings == 2){
+					document.getElementById("results").innerHTML = (winnings + " matches and lucky ball! You win $25!");
+				} else if (winnings == 1){
+					document.getElementById("results").innerHTML = (winnings + " matches and lucky ball! You win $6!");
+				}
+				else if (winnings == 0){
+					document.getElementById("results").innerHTML = (winnings + " matches and lucky ball! You win $4!");
+				}
+			} else {
+				if (winnings >= 5) {
+					document.getElementById("results").innerHTML = (winnings + " matches and but no lucky ball! You win $25,000 a YEAR for LIFE!");
+				} else if (winnings == 4){
+					document.getElementById("results").innerHTML = (winnings + " matches and but no lucky ball! You win $200");
+				} else if (winnings == 3){
+					document.getElementById("results").innerHTML = (winnings + " matches and but no lucky ball! You win $20");
+				} else if (winnings == 2){
+					document.getElementById("results").innerHTML = (winnings + " matches and but no lucky ball! You win $3");
+				} else if (winnings == 1){
+					document.getElementById("results").innerHTML = (winnings + " matches and but no lucky ball! You win a sense of achievement :)");
+				}
+				else if (winnings == 0){
+					document.getElementById("results").innerHTML += (winnings + " matches and but no lucky ball! You win valuable life experience(?)");
+				}
+
+			}
+		}
+		function parse_array(string) {
+			var first_num = 0;
+			var arr_val = 0;
+			for (i = 0; i < string.length; i++) {
+				
+
+				if (string.charAt(i+1) == ' ' || i+1 == string.length) {
+					var temp = "";
+					for (j = first_num; j<i+1; j++) {
+						temp = temp + string.charAt(j);
+					}
+					guessstring[arr_val] = temp;
+					arr_val++;
+					first_num = i+2; 
+				}
+
+			}
+			return guessstring;
+		}
+
+		function num_con(guessstring, guessnum) {
+		for (i = 0; i < guessstring.length; i++) {
+			var x = parseInt(guessstring[i]);
+			guessnum[i] = x;
+				
+			}
+		return guessnum;
+		}
+
+		function print_arr (guess) {
+			for (i = 0; i < guess.length; i++) {
+				document.getElementById("answer").innerHTML += ("array index:" + i + "array value:" + guess[i]+ "<br>");
+			}
+		}
+
+		</script>
+	</body>
+</html>
